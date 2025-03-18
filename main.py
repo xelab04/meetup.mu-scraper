@@ -1,10 +1,25 @@
-url = "https://www.meetup.com/mauritiussoftwarecraftsmanshipcommunity/events/ical/"
-
 import requests
 from pprint import pprint
 from datetime import datetime
 from ollama import Client
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+DATABASE_URL=os.environ["DATABASE_URL"]
+DATABASE_PORT=os.environ["DATABASE_PORT"]
+DATABASE_USER=os.environ["DATABASE_USER"]
+DATABASE_PASSWORD=os.environ["DATABASE_PASSWORD"]
+DATABASE_DATABASE=os.environ["DATABASE_DATABASE"]
+
+OLLAMA_URL=os.environ["OLLAMA_URL"]
+OLLAMA_PORT=os.environ["OLLAMA_PORT"]
+OLLAMA_MODEL='gemma3:1b'
+
+
 
 def parse_one_event(event_lines):
     """
@@ -12,7 +27,7 @@ def parse_one_event(event_lines):
     Parses it to get the fields needed.
     Returns all the fields as a dictionary/json.
     """
-    
+
     def get_description(event_lines):
         start = [i for (i,line) in enumerate(event_lines) if line.startswith("DESCRIPTION:")][0]
         end = start+1
@@ -76,13 +91,13 @@ def get_location(description):
     """
 
     content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
-    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'" 
+    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'"
 
     client = Client(
-        host='http://localhost:11434',
+        host=f"{OLLAMA_URL}:{OLLAMA_PORT}",
     )
 
-    response = client.chat(model='gemma3:1b', messages=[
+    response = client.chat(model=OLLAMA_MODEL, messages=[
         {
             'role': 'user',
             'content': content,
@@ -104,7 +119,7 @@ def get_all_jsons(url):
     Adds jsons to list
     Returns list
     """
-    
+
     response = requests.get(url)
     content = response.content
 
@@ -127,9 +142,8 @@ def get_all_jsons(url):
 def main():
     with open("communities.json", "r") as f:
         communities = json.load(f)
-    for community in communities:    
+    for community in communities:
         get_all_jsons(community["url"])
 
 if __name__ == "__main__":
     main()
-
