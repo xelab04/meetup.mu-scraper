@@ -4,8 +4,15 @@ import requests
 from pprint import pprint
 from datetime import datetime
 from ollama import Client
+import json
 
 def parse_one_event(event_lines):
+    """
+    Takes all the lines for a single event.
+    Parses it to get the fields needed.
+    Returns all the fields as a dictionary/json.
+    """
+    
     def get_description(event_lines):
         start = [i for (i,line) in enumerate(event_lines) if line.startswith("DESCRIPTION:")][0]
         end = start+1
@@ -19,7 +26,11 @@ def parse_one_event(event_lines):
     title = [l for l in event_lines if l.startswith("SUMMARY:")][0].split(":")[1]
 
     url_line_index = [i for (i,line) in enumerate(event_lines) if line.startswith("URL;VALUE=URI:")][0]
-    url = (event_lines[url_line_index] + event_lines[url_line_index+1]).strip("URL;VALUE=URI:").replace(" ","")
+
+    if event_lines[url_line_index+1].startswith(" "):
+        url = (event_lines[url_line_index] + event_lines[url_line_index+1]).strip("URL;VALUE=URI:").replace(" ","")
+    else:
+        url = event_lines[url_line_index].strip("URL;VALUE=URI:").replace(" ","")
     meetup_type = "meetup"
     abstract = get_description(event_lines)
     location = get_location(abstract)
@@ -38,6 +49,12 @@ def parse_one_event(event_lines):
 
 
 def get_all_events(all_lines):
+    """
+    Takes all the lines from the ical, splits the lines into blocks (one block for each event).
+    Then just returns a 2d array. Each element corresponds to one event.
+    Each element has all the lines from the event's entry in the ical.
+    """
+
     offset = 0
     event_lines = []
     while any(["VEVENT" in l for l in all_lines]):
@@ -53,7 +70,13 @@ def get_all_events(all_lines):
 
 
 def get_location(description):
-    content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'"
+    """
+    Takes the entire unformatted, fairly ugly-looking description and asks the AI slave to get the location for me. Not always accurate on TBC/TBD but whatever.
+
+    """
+
+    content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
+    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'" 
 
     client = Client(
         host='http://localhost:11434',
@@ -69,24 +92,43 @@ def get_location(description):
     return response.message.content.strip("\n").strip(".")
 
 
-def main():
+def add_to_db(list_of_jsons):
+    return NotImplementedError
+
+
+def get_all_jsons(url):
     """
+    Fetches the URL for the ical
+    Uses get_all_events to get all the lines
+    Uses parse_one_event on each event
+    Adds jsons to list
+    Returns list
+    """
+    
     response = requests.get(url)
     content = response.content
 
     with open("ical.vcs", "wb+") as filehandle:
         filehandle.write(content)
-    """
 
     with open("ical.vcs", "r") as filehandle:
         lines = [l.strip("\n") for l in filehandle.readlines()]
 
     offset = 0
-    all_events = get_all_events(lines)
-    for event in all_events:
-        pprint(parse_one_event(event))
-    
+    all_event_str = get_all_events(lines)
+    all_event_json = []
+    for event in all_event_str:
+        all_event_json.append(parse_one_event(event))
 
+    pprint(all_event_json)
+    return all_event_json
+
+
+def main():
+    with open("communities.json", "r") as f:
+        communities = json.load(f)
+    for community in communities:    
+        get_all_jsons(community["url"])
 
 if __name__ == "__main__":
     main()
