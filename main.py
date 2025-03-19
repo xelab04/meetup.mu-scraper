@@ -121,13 +121,14 @@ def add_to_db(list_of_jsons):
     cursor = conn.cursor()
 
     for event in list_of_jsons:
-        cursor.execute("DELETE FROM events WHERE url = %s", (event["url"],))
+        pprint(event)
+        # cursor.execute("DELETE FROM events WHERE url = %s", (event["url"],))
 
-        # Insert new entry
-        cursor.execute('''
-            INSERT INTO events (community, title, url, type, location, abstract, date)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
+        # # Insert new entry
+        # cursor.execute('''
+        #     INSERT INTO events (community, title, url, type, location, abstract, date)
+        #     VALUES (%s, %s, %s, %s, %s, %s, %s)
+        # ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
 
 
 
