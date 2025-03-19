@@ -198,7 +198,18 @@ def frontend_mu():
     return newjsons
 
 
+def cnmu():
+    # url = "https://cloudnativemauritius.com/api/meetups"
+    url = "http://127.0.0.1:8000/api/meetups"
+    response = requests.get(url)
+    data = response.json()
+    return data
+
 def main():
+    cnmu_events = cnmu()
+    # pprint(cnmu_events)
+    add_to_db(cnmu_events)
+
     frontend_events = frontend_mu()
     # pprint(frontend_events)
     add_to_db(frontend_events)

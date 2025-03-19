@@ -3,8 +3,8 @@ VERSION:2.0
 PRODID:-//Meetup//Meetup Calendar 1.0//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-NAME:.NET User Group Mauritius
-X-WR-CALNAME:.NET User Group Mauritius
+NAME:Mauritius Software Craftsmanship Community
+X-WR-CALNAME:Mauritius Software Craftsmanship Community
 BEGIN:VTIMEZONE
 TZID:Indian/Mauritius
 TZURL:http://tzurl.org/zoneinfo-outlook/Indian/Mauritius
@@ -17,28 +17,240 @@ DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:event_306588043@meetup.com
+UID:event_306659299@meetup.com
 SEQUENCE:1
-DTSTAMP:20250319T072146Z
-DTSTART;TZID=Indian/Mauritius:20250419T100000
-DTEND;TZID=Indian/Mauritius:20250419T150000
-SUMMARY:.NET Meetup 04/2024
-DESCRIPTION:.NET User Group Mauritius\nThe .NET User Group (Mauritius) is 
- hosting a meetup once every quarter where each meetup will have a theme.\n
- \nTopics are about .NET and other Microsoft technologies (Microsoft Azure\
- , Copilot Studio and others) including how other technologies integrate an
- d make use of these tools.\n\nIt is open for all regardless of your profes
- sional experience or technology preferences - there is always something of
-  interest for all enthusiasts!\n\nHang tight as we finalize the details of
-  our April event and we will share them with you soon!
-URL;VALUE=URI:https://www.meetup.com/net-user-group-mauritius/events/30658
- 8043/
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250412T100000
+DTEND;TZID=Indian/Mauritius:20250412T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\n**Please RSVP here
+ **: https://gdg.community.dev/events/details/google-gdg-mauritius-presents
+ -build-with-ai-1/\n\nFor **April\,** the meetup will be at **SWAN** and is
+  in collaboration with the GDG Mauritius.\nThe theme is: **Build with AI**
+ \n\nThe agenda for this meetup is:\n\n* Gemini API: Getting started with G
+ emini 2.0 - Jochen Kirstätter\n* Your Personal AI Assistant: Integrating 
+ Gemini into your Mobile Apps. - Pranav Gupta Chummun\n* Multimodal Live AP
+ I - Quickstart - Jochen Kirstätter\n* Advanced features using Gemini 2.0 
+ - Jochen Kirstätter\n\nMore details about the meetup will be communicated
+  on the MSCC social media platforms\; [Facebook](https://www.facebook.com/
+ MauritiusSoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter.com/M
+ SCraftsman)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) and of 
+ course Meetup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/306659299/
 STATUS:CONFIRMED
-CREATED:20250307T083636Z
-LAST-MODIFIED:20250307T083636Z
+CREATED:20250311T055530Z
+LAST-MODIFIED:20250311T055530Z
 CLASS:PUBLIC
 END:VEVENT
-X-ORIGINAL-URL:https://www.meetup.com/net-user-group-mauritius/events/ical
- /
-X-WR-CALNAME:.NET User Group Mauritius
+BEGIN:VEVENT
+UID:event_304373239@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250510T100000
+DTEND;TZID=Indian/Mauritius:20250510T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSeIC2tcCWgvzHY7k8HqIFLca6BWoZ
+ MoLebR340wPMP5qVgnGA/viewform?usp=sharing).\n\nFor **May\,** the meetup wi
+ ll be at **iQera**\nThe theme is: Continuous integration/deployment\n\nThe
+  speakers featured for this meetup will be announced.\n\nAnyone interested
+  in becoming a speaker for this Meetup is welcome to submit their proposal
+  **[here](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0
+ AR6OXjUcD9Mv1BRdwGoKBmg5ug/viewform).**\n\nMore details about the meetup w
+ ill be communicated on the MSCC social media platforms\; [Facebook](https:
+ //www.facebook.com/MauritiusSoftwareCraftsmanshipCommunity)\, [Twitter](ht
+ tps://twitter.com/MSCraftsman)\, [LinkedIn](https://www.linkedin.com/group
+ s/5033639/) and of course Meetup!\n\nWe are eager to meet you and catch up
+ !
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/304373239/
+STATUS:CONFIRMED
+CREATED:20241104T073132Z
+LAST-MODIFIED:20241104T073132Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_304373707@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250614T100000
+DTEND;TZID=Indian/Mauritius:20250614T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **June\,** the meetup will be at **
+ Novity**\nThe theme is: Testing\n\nThe speakers featured for this meetup w
+ ill be announced.\n\nAnyone interested in becoming a speaker for this Meet
+ up is welcome to submit their proposal **[here](https://docs.google.com/fo
+ rms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXjUcD9Mv1BRdwGoKBmg5ug/viewform)
+ .**\n\nMore details about the meetup will be communicated on the MSCC soci
+ al media platforms\; [Facebook](https://www.facebook.com/MauritiusSoftware
+ CraftsmanshipCommunity)\, [Twitter](https://twitter.com/MSCraftsman)\, [Li
+ nkedIn](https://www.linkedin.com/groups/5033639/) and of course Meetup!\n\
+ nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/304373707/
+STATUS:CONFIRMED
+CREATED:20241104T083903Z
+LAST-MODIFIED:20241104T083903Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_305665011@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250712T100000
+DTEND;TZID=Indian/Mauritius:20250712T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **July\,** the meetup will be at **
+ Accenture**\nThe theme is: Cloud Computing\n\nThe speakers featured for th
+ is meetup will be announced.\n\nAnyone interested in becoming a speaker fo
+ r this Meetup is welcome to submit their proposal **[here](https://docs.go
+ ogle.com/forms/d/e/1FAIpQLSeIC2tcCWgvzHY7k8HqIFLca6BWoZMoLebR340wPMP5qVgnG
+ A/viewform?usp=sharing).**\n\nMore details about the meetup will be commun
+ icated on the MSCC social media platforms\; [Facebook](https://www.faceboo
+ k.com/MauritiusSoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter
+ .com/MSCraftsman)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) a
+ nd of course Meetup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/305665011/
+STATUS:CONFIRMED
+CREATED:20250117T110235Z
+LAST-MODIFIED:20250117T110235Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_305665022@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250809T100000
+DTEND;TZID=Indian/Mauritius:20250809T120000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **August\,** the meetup will be at 
+ **Nettobe**\nThe theme is: AI/ ML\n\nThe speakers featured for this meetup
+  will be announced.\n\nAnyone interested in becoming a speaker for this Me
+ etup is welcome to submit their proposal **[here](https://docs.google.com/
+ forms/d/e/1FAIpQLSeIC2tcCWgvzHY7k8HqIFLca6BWoZMoLebR340wPMP5qVgnGA/viewfor
+ m?usp=sharing).**\n\nMore details about the meetup will be communicated on
+  the MSCC social media platforms\; [Facebook](https://www.facebook.com/Mau
+ ritiusSoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter.com/MSCr
+ aftsman)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) and of cou
+ rse Meetup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/305665022/
+STATUS:CONFIRMED
+CREATED:20250117T110353Z
+LAST-MODIFIED:20250117T110353Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_305532107@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20250912T100000
+DTEND;TZID=Indian/Mauritius:20250912T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **September\,** the meetup will be 
+ at **TBC**\nThe theme is: TBC\n\nThe speakers featured for this meetup wil
+ l be announced at the beginning of September.\n\n**Food - please send us a
+  msg if you are vegetarian.**\n\nAnyone interested in becoming a speaker f
+ or this Meetup is welcome to submit their proposal **[here](https://docs.g
+ oogle.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXjUcD9Mv1BRdwGoKBmg5
+ ug/viewform).**\n\nMore details about the meetup will be communicated on t
+ he MSCC social media platforms\; [Facebook](https://www.facebook.com/Mauri
+ tiusSoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter.com/MSCraf
+ tsman)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) and of cours
+ e Meetup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/305532107/
+STATUS:CONFIRMED
+CREATED:20250110T064730Z
+LAST-MODIFIED:20250110T064730Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_305532112@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20251010T100000
+DTEND;TZID=Indian/Mauritius:20251010T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **October\,** the meetup will be at
+  **TBC**\nThe theme is: TBC\n\nThe speakers featured for this meetup will 
+ be announced at the beginning of October.\n\n**Food - please send us a msg
+  if you are vegetarian.**\n\nAnyone interested in becoming a speaker for t
+ his Meetup is welcome to submit their proposal **[here](https://docs.googl
+ e.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXjUcD9Mv1BRdwGoKBmg5ug/v
+ iewform).**\n\nMore details about the meetup will be communicated on the M
+ SCC social media platforms\; [Facebook](https://www.facebook.com/Mauritius
+ SoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter.com/MSCraftsma
+ n)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) and of course Me
+ etup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/305532112/
+STATUS:CONFIRMED
+CREATED:20250110T064815Z
+LAST-MODIFIED:20250110T064815Z
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:event_305532124@meetup.com
+SEQUENCE:1
+DTSTAMP:20250319T175516Z
+DTSTART;TZID=Indian/Mauritius:20251114T100000
+DTEND;TZID=Indian/Mauritius:20251114T150000
+SUMMARY:MSCC Monthly Meetup
+DESCRIPTION:Mauritius Software Craftsmanship Community\nThe MSCC is back w
+ ith its physical Monthly Meetups! Join us every 2nd Saturday of the month 
+ to discuss\, learn\, and network!\n\nEach monthly meetup will have a theme
+  and anyone interested in presenting is welcome to send their proposal [he
+ re](https://docs.google.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXj
+ UcD9Mv1BRdwGoKBmg5ug/viewform).\n\nFor **November\,** the meetup will be a
+ t **TBC**\nThe theme is: TBC\n\nThe speakers featured for this meetup will
+  be announced at the beginning of November.\n\n**Food - please send us a m
+ sg if you are vegetarian.**\n\nAnyone interested in becoming a speaker for
+  this Meetup is welcome to submit their proposal **[here](https://docs.goo
+ gle.com/forms/d/e/1FAIpQLSe6u9oBSlx0xq7x2mx4Flb0AR6OXjUcD9Mv1BRdwGoKBmg5ug
+ /viewform).**\n\nMore details about the meetup will be communicated on the
+  MSCC social media platforms\; [Facebook](https://www.facebook.com/Mauriti
+ usSoftwareCraftsmanshipCommunity)\, [Twitter](https://twitter.com/MSCrafts
+ man)\, [LinkedIn](https://www.linkedin.com/groups/5033639/) and of course 
+ Meetup!\n\nWe are eager to meet you and catch up!
+URL;VALUE=URI:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommuni
+ ty/events/305532124/
+STATUS:CONFIRMED
+CREATED:20250110T065114Z
+LAST-MODIFIED:20250110T065114Z
+CLASS:PUBLIC
+END:VEVENT
+X-ORIGINAL-URL:https://www.meetup.com/mauritiussoftwarecraftsmanshipcommun
+ ity/events/ical/
+X-WR-CALNAME:Mauritius Software Craftsmanship Community
 END:VCALENDAR
