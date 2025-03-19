@@ -5,6 +5,7 @@ from ollama import Client
 import json
 import os
 from dotenv import load_dotenv
+import mysql.connector
 
 load_dotenv()
 
@@ -20,8 +21,7 @@ OLLAMA_PORT=os.environ["OLLAMA_PORT"]
 OLLAMA_MODEL='gemma3:1b'
 
 
-
-def parse_one_event(event_lines):
+def parse_one_event(event_lines, name):
     """
     Takes all the lines for a single event.
     Parses it to get the fields needed.
@@ -54,6 +54,7 @@ def parse_one_event(event_lines):
     dates = datetime.strptime(dates, '%Y%m%d')
 
     return {
+        "community": name,
         "title": title,
         "url": url,
         "type": meetup_type,
@@ -108,10 +109,29 @@ def get_location(description):
 
 
 def add_to_db(list_of_jsons):
-    return NotImplementedError
+    DB_CONFIG = {
+        "host": f"{DATABASE_URL}:{DATABASE_PORT}",
+        "user": DATABASE_USER,
+        "password": DATABASE_PASSWORD,
+        "database": DATABASE_DATABASE
+    }
+
+    # Connect to MySQL
+    conn = mysql.connector.connect(**DB_CONFIG)
+    cursor = conn.cursor()
+
+    for event in list_of_jsons:
+        cursor.execute("DELETE FROM events WHERE url = %s", (event["url"],))
+
+        # Insert new entry
+        cursor.execute('''
+            INSERT INTO events (community, title, url, type, location, abstract, date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
 
 
-def get_all_jsons(url):
+
+def get_all_jsons(url, name):
     """
     Fetches the URL for the ical
     Uses get_all_events to get all the lines
@@ -129,21 +149,58 @@ def get_all_jsons(url):
     with open("ical.vcs", "r") as filehandle:
         lines = [l.strip("\n") for l in filehandle.readlines()]
 
-    offset = 0
     all_event_str = get_all_events(lines)
     all_event_json = []
     for event in all_event_str:
-        all_event_json.append(parse_one_event(event))
+        all_event_json.append(parse_one_event(event, name))
 
     pprint(all_event_json)
     return all_event_json
 
 
+def frontend_mu():
+    # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    url = "https://raw.githubusercontent.com/frontendmu/frontend.mu/main/packages/frontendmu-data/data/meetups-raw.json"
+    response = requests.get(url)
+    data = response.json()
+    # Yay, we now have 260kB of JSON.
+    # I shall scream.
+
+    newjsons = []
+    for event in data:
+        # where event is a collection of json mess for one event
+        if event["accepting_rsvp"] == False:
+            # not accepting rsvp = i don't care.
+            # maybe delete if already there?
+            # idfk
+            continue
+        new_event_json = {
+            "community": "frontendmu",
+            "title": "FrontendMU" + event["title"],
+            "url": f"https://frontend.mu/meetup/{event['id']}",
+            "type": "meetup",
+            "location": event['Venue'],
+            "abstract": "-",
+            "date": datetime.strptime(event['Date'], '%Y-%m-%d')
+        }
+
+        newjsons.append(new_event_json)
+
+        if event["id"] == 60:
+            pprint(new_event_json)
+        return newjsons
+
+
 def main():
+    frontend_events = frontend_mu()
+    add_to_db(frontend_events)
+    return 0
+
     with open("communities.json", "r") as f:
         communities = json.load(f)
     for community in communities:
-        get_all_jsons(community["url"])
+        all_event_json = get_all_jsons(community["url"], community["name"])
+        add_to_db(all_event_json)
 
 if __name__ == "__main__":
     main()

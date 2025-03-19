@@ -1,0 +1,5 @@
+requests
+datetime
+ollama
+dotenv
+mysql-connector-python
