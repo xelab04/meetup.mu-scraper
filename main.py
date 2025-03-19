@@ -110,7 +110,8 @@ def get_location(description):
 
 def add_to_db(list_of_jsons):
     DB_CONFIG = {
-        "host": f"{DATABASE_URL}:{DATABASE_PORT}",
+        "host": DATABASE_URL,
+        "port": DATABASE_PORT,
         "user": DATABASE_USER,
         "password": DATABASE_PASSWORD,
         "database": DATABASE_DATABASE
@@ -121,14 +122,18 @@ def add_to_db(list_of_jsons):
     cursor = conn.cursor()
 
     for event in list_of_jsons:
-        pprint(event)
-        # cursor.execute("DELETE FROM events WHERE url = %s", (event["url"],))
+        # pprint(event)
+        cursor.execute("DELETE FROM meetups WHERE registration = %s", (event["url"],))
 
-        # # Insert new entry
-        # cursor.execute('''
-        #     INSERT INTO events (community, title, url, type, location, abstract, date)
-        #     VALUES (%s, %s, %s, %s, %s, %s, %s)
-        # ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
+        # Insert new entry
+        print(f"Inserting event: {event['title']}")
+        cursor.execute('''
+            INSERT INTO meetups (community, title, registration, type, location, abstract, date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
+
+    conn.commit()
+    conn.close()
 
 
 
@@ -177,7 +182,7 @@ def frontend_mu():
             continue
         new_event_json = {
             "community": "frontendmu",
-            "title": "FrontendMU" + event["title"],
+            "title": "FrontendMU " + event["title"],
             "url": f"https://frontend.mu/meetup/{event['id']}",
             "type": "meetup",
             "location": event['Venue'],
@@ -189,18 +194,21 @@ def frontend_mu():
 
         if event["id"] == 60:
             pprint(new_event_json)
-        return newjsons
+    print(len(newjsons))
+    return newjsons
 
 
 def main():
     frontend_events = frontend_mu()
+    # pprint(frontend_events)
     add_to_db(frontend_events)
-    return 0
+    # return 0
 
     with open("communities.json", "r") as f:
         communities = json.load(f)
     for community in communities:
         all_event_json = get_all_jsons(community["url"], community["name"])
+        # pprint(all_event_json)
         add_to_db(all_event_json)
 
 if __name__ == "__main__":
