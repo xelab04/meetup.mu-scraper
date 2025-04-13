@@ -16,10 +16,6 @@ spec:
                 - configMapRef:
                     name: scraper-cfm
 
-              resources:
-                requests:
-                  memory: "2Gi"
-
               env:
                 - name: DATABASE_USER
                   valueFrom:
