@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: meetupcomscraper
+spec:
+  schedule: "0 0 */2 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: meetupcom-scraper
+              image: registry.alexbissessur.dev/meetup-scraper:1.4
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: scraper-cfm
+
+              env:
+                - name: COMMUNITY
+                  value: MEETUPCOM
+
+                - name: DATABASE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: env-secret
+                      key: MYSQL_USER
+
+                - name: DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: env-secret
+                      key: MYSQL_PASSWORD
+
+                - name: DATABASE_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: env-secret
+                      key: MYSQL_DATABASE
+
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: regcred
