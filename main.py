@@ -20,6 +20,8 @@ OLLAMA_URL=os.environ["OLLAMA_URL"]
 OLLAMA_PORT=os.environ["OLLAMA_PORT"]
 OLLAMA_MODEL='gemma3:1b'
 
+COMMUNITY = os.environ["COMMUNITY"]
+
 
 def parse_one_event(event_lines, name):
     """
@@ -207,16 +209,26 @@ def cnmu():
     return data
 
 def main():
-    cnmu_events = cnmu()
-    add_to_db(cnmu_events)
+    if COMMUNITY == "cnmu":
+        cnmu_events = cnmu()
+        add_to_db(cnmu_events)
+        return 0
 
-    frontend_events = frontend_mu()
-    add_to_db(frontend_events)
+    if COMMUNITY == "frontendmu":
+        frontend_events = frontend_mu()
+        add_to_db(frontend_events)
+        return 0
 
-    with open("communities.json", "r") as f:
-        communities = json.load(f)
-    for community in communities:
-        all_event_json = get_all_jsons(community["url"], community["name"])
+    if COMMUNITY == "MEETUPCOM":
+        with open("communities.json", "r") as f:
+            communities = json.load(f)
+        for community in communities:
+            all_event_json = get_all_jsons(community["url"], community["name"])
+            add_to_db(all_event_json)
+    else:
+        with open("newcommunities.json", "r") as f:
+            communities = json.load(f)
+        all_event_json = get_all_jsons(COMMUNITY, communities[COMMUNITY])
         add_to_db(all_event_json)
 
 if __name__ == "__main__":
