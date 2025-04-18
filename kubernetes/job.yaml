@@ -11,7 +11,7 @@
 #           containers:
 #             - name: scraper
 #               image: registry.alexbissessur.dev/meetup-scraper:1.4
-#               imagePullPolicy: IfNotPresent
+#               imagePullPolicy: Always
 #               envFrom:
 #                 - configMapRef:
 #                     name: scraper-cfm
