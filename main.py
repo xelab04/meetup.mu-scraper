@@ -29,8 +29,10 @@ def parse_one_event(event_lines, name):
     """
 
     def get_description(event_lines):
+        # get the line where description starts
         start = [i for (i,line) in enumerate(event_lines) if line.startswith("DESCRIPTION:")][0]
         end = start+1
+        # all description lines will be indented after
         while event_lines[end].startswith(" "):
             end += 1
         all_lines = "".join([l.strip("\n") for l in event_lines[start:end]])
@@ -136,7 +138,6 @@ def add_to_db(list_of_jsons):
     conn.close()
 
 
-
 def get_all_jsons(url, name):
     """
     Fetches the URL for the ical
@@ -199,6 +200,7 @@ def frontend_mu():
 
 
 def cnmu():
+    # hehe i like this
     url = "https://cloudnativemauritius.com/api/meetups"
     response = requests.get(url)
     data = response.json()
@@ -206,19 +208,15 @@ def cnmu():
 
 def main():
     cnmu_events = cnmu()
-    # pprint(cnmu_events)
     add_to_db(cnmu_events)
 
     frontend_events = frontend_mu()
-    # pprint(frontend_events)
     add_to_db(frontend_events)
-    # return 0
 
     with open("communities.json", "r") as f:
         communities = json.load(f)
     for community in communities:
         all_event_json = get_all_jsons(community["url"], community["name"])
-        # pprint(all_event_json)
         add_to_db(all_event_json)
 
 if __name__ == "__main__":
