@@ -28,6 +28,8 @@ def parse_one_event(event_lines, name):
     Takes all the lines for a single event.
     Parses it to get the fields needed.
     Returns all the fields as a dictionary/json.
+
+    name = name of community
     """
 
     def get_description(event_lines):
@@ -58,6 +60,7 @@ def parse_one_event(event_lines, name):
     dates = datetime.strptime(dates, '%Y%m%d')
 
     return {
+        "id": f"{name}-{url.strip("/").split("/")[-1]}",
         "community": name,
         "title": title,
         "url": url,
@@ -184,12 +187,13 @@ def frontend_mu():
             # idfk
             continue
         new_event_json = {
+            "id": f"frontendmu-{event['id']}",
             "community": "frontendmu",
             "title": "FrontendMU " + event["title"],
             "url": f"https://frontend.mu/meetup/{event['id']}",
             "type": "meetup",
             "location": event['Venue'],
-            "abstract": "-",
+            "abstract": "",
             "date": datetime.strptime(event['Date'], '%Y-%m-%d')
         }
 
@@ -206,6 +210,10 @@ def cnmu():
     url = "https://cloudnativemauritius.com/api/meetups"
     response = requests.get(url)
     data = response.json()
+    for record in data:
+        record["id"] = f"cnmu-{record['id']}"
+    print(data)
+
     return data
 
 def main():
