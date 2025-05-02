@@ -10,8 +10,8 @@ spec:
         spec:
           containers:
             - name: frontend-scraper
-              image: registry.alexbissessur.dev/meetup-scraper:1.4
-              imagePullPolicy: Always
+              image: registry.alexbissessur.dev/meetup-scraper:1.5
+              imagePullPolicy: IfNotPresent
               envFrom:
                 - configMapRef:
                     name: scraper-cfm
