@@ -112,7 +112,7 @@ def get_location(description):
             },
         ])
     except:
-        response = "<error>"
+        return "<error>"
 
     return response.message.content.strip("\n").strip(".")
 
