@@ -60,7 +60,7 @@ def parse_one_event(event_lines, name):
     dates = datetime.strptime(dates, '%Y%m%d')
 
     return {
-        "id": f"{name}-{url.strip("/").split("/")[-1]}",
+        "id": f"{name}-{url.strip('/').split('/')[-1]}",
         "community": name,
         "title": title,
         "url": url,
