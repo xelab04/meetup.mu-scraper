@@ -104,13 +104,15 @@ def get_location(description):
     client = Client(
         host=f"{OLLAMA_URL}:{OLLAMA_PORT}",
     )
-
-    response = client.chat(model=OLLAMA_MODEL, messages=[
-        {
-            'role': 'user',
-            'content': content,
-        },
-    ])
+    try:
+        response = client.chat(model=OLLAMA_MODEL, messages=[
+            {
+                'role': 'user',
+                'content': content,
+            },
+        ])
+    except:
+        response = "<error>"
 
     return response.message.content.strip("\n").strip(".")
 
