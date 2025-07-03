@@ -14,5 +14,9 @@
   {
     "name": "nugm",
     "url": "https://www.meetup.com/net-user-group-mauritius/events/ical/"
+  },
+  {
+    "name": "pydata",
+    "url": "https://www.meetup.com/pydata-mu/"
   }
 ]
