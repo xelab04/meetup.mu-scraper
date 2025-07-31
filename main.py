@@ -187,7 +187,7 @@ def frontend_mu():
             # not accepting rsvp = i don't care.
             # maybe delete if already there?
             # idfk
-            continue
+            pass
         new_event_json = {
             "id": f"frontendmu-{event['id']}",
             "community": "frontendmu",
