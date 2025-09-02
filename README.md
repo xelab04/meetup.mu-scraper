@@ -11,5 +11,5 @@ Nothing left to be done, this is pretty complete!
 ## Deploy
 
 ```
-docker build . -t registry.alexbissessur.dev/meetup-scraper:{} && docker push registry.alexbissessur.dev/meetup-scraper:{}
+docker build . -f job.Dockerfile -t registry.alexbissessur.dev/meetup-scraper:{} && docker push registry.alexbissessur.dev/meetup-scraper:{}
 ```
