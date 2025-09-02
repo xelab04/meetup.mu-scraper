@@ -99,11 +99,16 @@ def delete_frontendmu() -> int|None:
     response = requests.get(url)
     big_frontend_json = response.json()
 
+
     list_of_ids = [f"frontendmu-{event['id']}" for event in big_frontend_json]
 
-    # delete all frontendmu events from db where id is not in the list_of_existing_ids
     conn, cursor = get_db_cursor()
-    cursor.execute("DELETE FROM meetups WHERE community='frontendmu' AND meetup_id NOT IN :ids", {"ids": list_of_ids})
+    placeholders = ','.join(['%s'] * len(list_of_ids))
+    query = f"DELETE FROM meetups WHERE community='frontendmu' AND meetup_id NOT IN ({placeholders})"
+    cursor.execute(query, list_of_ids)
+
+    # delete all frontendmu events from db where id is not in the list_of_existing_ids
+    # cursor.execute("DELETE FROM meetups WHERE community='frontendmu' AND meetup_id NOT IN :ids", {"ids": list_of_ids})
 
     conn.commit()
     conn.close()
