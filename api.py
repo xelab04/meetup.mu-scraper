@@ -1,5 +1,5 @@
 import job
-from flask import Flask
+from flask import Flask, jsonify
 import os
 import sys
 import time
@@ -26,16 +26,22 @@ except KeyError:
 
 @app.route('/frontend', methods=['POST'])
 def frontend():
-    frontend_events = job.frontendmu()
-    pprint(frontend_events)
-    job.add_to_db(frontend_events)
-    job.delete_frontendmu()
+    try:
+        frontend_events = job.frontendmu()
+        pprint(frontend_events)
+        job.add_to_db(frontend_events)
+        job.delete_frontendmu()
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        return jsonify({"status": str(e)}), 500
 
 @app.route('/cloudnativemu', methods=['POST'])
 def cloudnativemu():
     cnmu_events = job.cnmu()
     pprint(cnmu_events)
     job.add_to_db(cnmu_events)
+
+    return jsonify({"status": "success"}), 200
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
