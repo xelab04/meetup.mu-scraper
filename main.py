@@ -1,245 +1,194 @@
-import requests
-from pprint import pprint
-from datetime import datetime
-from ollama import Client
-import json
 import os
-from dotenv import load_dotenv
-import mysql.connector
+import sys
+import json
+from datetime import datetime
+from functools import lru_cache
+from typing import List, Dict
+import uuid
 
+import requests
+from dotenv import load_dotenv
+from loguru import logger
+import mysql.connector
+from ollama import Client
+
+# ================================
+# Config & Environment
+# ================================
 load_dotenv()
 
+DATABASE_CONFIG = {
+    "host": os.getenv("DATABASE_URL"),
+    "port": int(os.getenv("DATABASE_PORT", 3306)),
+    "user": os.getenv("DATABASE_USER"),
+    "password": os.getenv("DATABASE_PASSWORD"),
+    "database": os.getenv("DATABASE_DATABASE"),
+}
 
-DATABASE_URL=os.environ["DATABASE_URL"]
-DATABASE_PORT=os.environ["DATABASE_PORT"]
-DATABASE_USER=os.environ["DATABASE_USER"]
-DATABASE_PASSWORD=os.environ["DATABASE_PASSWORD"]
-DATABASE_DATABASE=os.environ["DATABASE_DATABASE"]
+OLLAMA_HOST = f"{os.getenv('OLLAMA_URL')}:{os.getenv('OLLAMA_PORT')}"
+OLLAMA_MODEL = 'gemma3:1b'
+COMMUNITY = os.getenv("COMMUNITY")
 
-OLLAMA_URL=os.environ["OLLAMA_URL"]
-OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-OLLAMA_MODEL='gemma3:1b'
+# ================================
+# Logging to stdout
+# ================================
+logger.remove()
+logger.add(sys.stdout, colorize=True,
+           format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level}</level> | {message}")
 
-COMMUNITY = os.environ["COMMUNITY"]
+# ================================
+# Ollama Client & Location Cache
+# ================================
+ollama_client = Client(host=OLLAMA_HOST)
 
-
-def parse_one_event(event_lines, name):
+@lru_cache(maxsize=1024)
+def get_location(description: str) -> str:
     """
-    Takes all the lines for a single event.
-    Parses it to get the fields needed.
-    Returns all the fields as a dictionary/json.
-
-    name = name of community
+    Uses Ollama AI to extract the location from a meetup description.
+    Returns 'TBD' if unknown. Caches repeated calls.
     """
+    prompt = (
+        f"{description}\n"
+        "Keep your answer brief and limited to only the answer with no extra words. "
+        "Only the company name. If it is not specified or TBC, just say TBD. "
+        "Where is the meetup taking place?"
+    )
+    try:
+        response = ollama_client.chat(model=OLLAMA_MODEL, messages=[{"role": "user", "content": prompt}])
+        return response.message.content.strip(".\n") or "TBD"
+    except Exception as e:
+        logger.warning(f"Ollama AI failed for description '{description[:30]}...': {e}")
+        return "TBD"
 
-    def get_description(event_lines):
-        # get the line where description starts
-        start = [i for (i,line) in enumerate(event_lines) if line.startswith("DESCRIPTION:")][0]
-        end = start+1
-        # all description lines will be indented after
-        while event_lines[end].startswith(" "):
-            end += 1
-        all_lines = "".join([l.strip("\n") for l in event_lines[start:end]])
+# ================================
+# iCal Parsing
+# ================================
+def parse_one_event(event_lines: List[str], name: str) -> Dict:
+    """
+    Parses a single VEVENT block from iCal into a dictionary.
+    Uses iCal UID for unique event ID.
+    """
+    def get_value(prefix: str, default: str = "") -> str:
+        return next((line.split(":", 1)[1].strip() for line in event_lines if line.startswith(prefix)), default)
 
-        return all_lines
+    title = get_value("SUMMARY:", "No Title")
+    description = get_value("DESCRIPTION:", "")
+    date_str = get_value("DTSTART;TZID=Indian/Mauritius:", "19700101")
+    url = get_value("URL;VALUE=URI:", "TBD")
+    uid = get_value("UID:", str(uuid.uuid4()))  # fallback if UID missing
 
-
-    title = [l for l in event_lines if l.startswith("SUMMARY:")][0].split(":")[1]
-
-    url_line_index = [i for (i,line) in enumerate(event_lines) if line.startswith("URL;VALUE=URI:")][0]
-
-    if event_lines[url_line_index+1].startswith(" "):
-        url = (event_lines[url_line_index] + event_lines[url_line_index+1]).strip("URL;VALUE=URI:").replace(" ","")
-    else:
-        url = event_lines[url_line_index].strip("URL;VALUE=URI:").replace(" ","")
-    meetup_type = "meetup"
-    abstract = get_description(event_lines)
-    location = get_location(abstract)
-
-    dates = [l for l in event_lines if l.startswith("DTSTART;TZID=Indian/Mauritius:")][0].split(":")[1].split("T")[0]
-    dates = datetime.strptime(dates, '%Y%m%d')
+    event_date = datetime.strptime(date_str.split("T")[0], "%Y%m%d")
+    location = get_location(description)
+    event_id = f"{name}-{uid}"
 
     return {
-        "id": f"{name}-{url.strip('/').split('/')[-1]}",
+        "id": event_id,
         "community": name,
         "title": title,
         "url": url,
-        "type": meetup_type,
+        "type": "meetup",
         "location": location,
-        "abstract": "",
-        "date": dates
+        "abstract": description,
+        "date": event_date,
     }
 
-
-def get_all_events(all_lines):
+def get_all_events(lines: List[str]) -> List[List[str]]:
     """
-    Takes all the lines from the ical, splits the lines into blocks (one block for each event).
-    Then just returns a 2d array. Each element corresponds to one event.
-    Each element has all the lines from the event's entry in the ical.
+    Splits iCal lines into VEVENT blocks.
     """
+    starts = [i for i, line in enumerate(lines) if line == "BEGIN:VEVENT"]
+    ends = [i for i, line in enumerate(lines) if line == "END:VEVENT"]
+    events = [lines[start:end + 1] for start, end in zip(starts, ends)]
+    logger.info(f"Parsed {len(events)} VEVENTs from iCal")
+    return events
 
-    offset = 0
-    event_lines = []
-    while any(["VEVENT" in l for l in all_lines]):
-        start = all_lines.index("BEGIN:VEVENT")
-        end = all_lines.index("END:VEVENT")
-        offset = end + 1
-        event_lines.append(all_lines[start:end])
-
-        all_lines = all_lines[offset::]
-
-    print(len(event_lines))
-    return event_lines
-
-
-def get_location(description):
+# ================================
+# Database Operations
+# ================================
+def add_to_db(events: List[Dict]):
     """
-    Takes the entire unformatted, fairly ugly-looking description and asks the AI slave to get the location for me. Not always accurate on TBC/TBD but whatever.
-
+    Inserts or updates events in the database.
     """
-
-    content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
-    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'"
-
-    client = Client(
-        host=f"{OLLAMA_URL}:{OLLAMA_PORT}",
-    )
     try:
-        response = client.chat(model=OLLAMA_MODEL, messages=[
-            {
-                'role': 'user',
-                'content': content,
-            },
-        ])
-    except:
-        return None
+        with mysql.connector.connect(**DATABASE_CONFIG) as conn:
+            cursor = conn.cursor()
+            for event in events:
+                cursor.execute("DELETE FROM meetups WHERE registration = %s", (event["url"],))
+                cursor.execute(
+                    """
+                    INSERT INTO meetups (id, community, title, registration, type, location, abstract, date)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (event["id"], event["community"], event["title"], event["url"], event["type"],
+                     event["location"], event["abstract"], event["date"])
+                )
+                logger.info(f"Inserted event: {event['title']}")
+            conn.commit()
+    except mysql.connector.Error as e:
+        logger.error(f"Database error: {e}")
 
-    return response.message.content.strip("\n").strip(".")
+# ================================
+# iCal Fetch & JSON Conversion
+# ================================
+def get_all_jsons(url: str, name: str) -> List[Dict]:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        logger.error(f"Failed to fetch URL {url}: {e}")
+        return []
 
+    lines = [line.strip() for line in response.text.splitlines()]
+    events_blocks = get_all_events(lines)
+    return [parse_one_event(block, name) for block in events_blocks]
 
-def add_to_db(list_of_jsons):
-    DB_CONFIG = {
-        "host": DATABASE_URL,
-        "port": DATABASE_PORT,
-        "user": DATABASE_USER,
-        "password": DATABASE_PASSWORD,
-        "database": DATABASE_DATABASE
-    }
-
-    # Connect to MySQL
-    conn = mysql.connector.connect(**DB_CONFIG)
-    cursor = conn.cursor()
-
-    for event in list_of_jsons:
-        # pprint(event)
-        cursor.execute("DELETE FROM meetups WHERE registration = %s", (event["url"],))
-
-        # Insert new entry
-        print(f"Inserting event: {event['title']}")
-        cursor.execute('''
-            INSERT INTO meetups (community, title, registration, type, location, abstract, date)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (event["community"], event["title"], event["url"], event["type"], event["location"], event["abstract"], event["date"]))
-
-    conn.commit()
-    conn.close()
-
-
-def get_all_jsons(url, name):
-    """
-    Fetches the URL for the ical
-    Uses get_all_events to get all the lines
-    Uses parse_one_event on each event
-    Adds jsons to list
-    Returns list
-    """
-
-    response = requests.get(url)
-    content = response.content
-
-    with open("ical.vcs", "wb+") as filehandle:
-        filehandle.write(content)
-
-    with open("ical.vcs", "r") as filehandle:
-        lines = [l.strip("\n") for l in filehandle.readlines()]
-
-    all_event_str = get_all_events(lines)
-    all_event_json = []
-    for event in all_event_str:
-        all_event_json.append(parse_one_event(event, name))
-
-    pprint(all_event_json)
-    return all_event_json
-
-
-def frontend_mu():
-    # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+# ================================
+# Community Parsers
+# ================================
+def frontend_mu() -> List[Dict]:
     url = "https://raw.githubusercontent.com/frontendmu/frontend.mu/main/packages/frontendmu-data/data/meetups-raw.json"
-    response = requests.get(url)
-    data = response.json()
-    # Yay, we now have 260kB of JSON.
-    # I shall scream.
-
-    newjsons = []
-    for event in data:
-        # where event is a collection of json mess for one event
-        if event["accepting_rsvp"] == False:
-            # not accepting rsvp = i don't care.
-            # maybe delete if already there?
-            # idfk
-            pass
-        new_event_json = {
+    data = requests.get(url).json()
+    return [
+        {
             "id": f"frontendmu-{event['id']}",
             "community": "frontendmu",
-            "title": "FrontendMU " + event["title"],
+            "title": f"FrontendMU {event['title']}",
             "url": f"https://frontend.mu/meetup/{event['id']}",
             "type": "meetup",
-            "location": event['Venue'],
+            "location": event.get("Venue", "TBD"),
             "abstract": "",
-            "date": datetime.strptime(event['Date'], '%Y-%m-%d')
+            "date": datetime.strptime(event['Date'], "%Y-%m-%d"),
         }
+        for event in data if event.get("accepting_rsvp", True)
+    ]
 
-        newjsons.append(new_event_json)
-
-        if event["id"] == 60:
-            pprint(new_event_json)
-    print(len(newjsons))
-    return newjsons
-
-
-def cnmu():
-    # hehe i like this
+def cnmu() -> List[Dict]:
     url = "https://cloudnativemauritius.com/api/meetups"
-    response = requests.get(url)
-    data = response.json()
-    for record in data:
-        record["id"] = f"cnmu-{record['id']}"
-    print(data)
+    data = requests.get(url).json()
+    return [{**record, "id": f"cnmu-{record['id']}"} for record in data]
 
-    return data
-
+# ================================
+# Main Flow
+# ================================
 def main():
-    if COMMUNITY == "cnmu":
-        cnmu_events = cnmu()
-        add_to_db(cnmu_events)
-        return 0
+    community_map = {
+        "cnmu": cnmu,
+        "frontendmu": frontend_mu
+    }
 
-    if COMMUNITY == "frontendmu":
-        frontend_events = frontend_mu()
-        add_to_db(frontend_events)
-        return 0
-
-    if COMMUNITY == "MEETUPCOM":
-        with open("communities.json", "r") as f:
+    if COMMUNITY in community_map:
+        add_to_db(community_map[COMMUNITY]())
+    elif COMMUNITY == "MEETUPCOM":
+        with open("communities.json") as f:
             communities = json.load(f)
         for community in communities:
-            all_event_json = get_all_jsons(community["url"], community["name"])
-            add_to_db(all_event_json)
+            events = get_all_jsons(community["url"], community["name"])
+            add_to_db(events)
     else:
-        with open("newcommunities.json", "r") as f:
+        with open("newcommunities.json") as f:
             communities = json.load(f)
-        all_event_json = get_all_jsons(COMMUNITY, communities[COMMUNITY])
-        add_to_db(all_event_json)
+        events = get_all_jsons(COMMUNITY, communities[COMMUNITY])
+        add_to_db(events)
 
 if __name__ == "__main__":
     main()
