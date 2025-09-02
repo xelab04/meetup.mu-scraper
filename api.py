@@ -36,3 +36,6 @@ def cloudnativemu():
     cnmu_events = job.cnmu()
     pprint(cnmu_events)
     job.add_to_db(cnmu_events)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
