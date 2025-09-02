@@ -17,6 +17,8 @@ spec:
       labels:
         app: meetup-scraper-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
       - image: registry.alexbissessur.dev/meetup-scraper-api:1.0
         name: meetup-scraper-api
