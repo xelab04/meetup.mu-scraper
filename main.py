@@ -188,7 +188,7 @@ def add_to_db(list_of_meetups: list[MEETUP]) -> None:
     conn, cursor = get_db_cursor()
 
     for meetup in list_of_meetups:
-        cursor.execute("SELECT COUNT(meetup_id) FROM meetups WHERE meetup_id = %s", (meetup.id))
+        cursor.execute("SELECT COUNT(meetup_id) FROM meetups WHERE meetup_id = %s", (meetup.id, ))
         result = cursor.fetchone()
 
         # if the event is already present, just update it
