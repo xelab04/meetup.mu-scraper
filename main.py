@@ -104,6 +104,9 @@ def delete_frontendmu() -> int|None:
 
     conn, cursor = get_db_cursor()
     placeholders = ','.join(['%s'] * len(list_of_ids))
+
+    print(f"Deleting events: {list_of_ids}")
+
     query = f"DELETE FROM meetups WHERE community='frontendmu' AND meetup_id NOT IN ({placeholders})"
     cursor.execute(query, list_of_ids)
 
@@ -153,7 +156,8 @@ def get_all_events(community) -> list[MEETUP]:
                 registration=component.get('url'),
                 type="meetup",
                 location=ai_location,
-                abstract=component.get('description'),
+                # abstract=component.get('description'),
+                abstract=None,
                 date=component.get('dtstart').dt
             ))
     return all_events
