@@ -4,14 +4,9 @@ Small utility to make my life easier (supposedly). It fetches events from meetup
 So that I don't have to update events manually.
 
 
-
-
 ## ToDo
 
-There's still a lot to be done. And I'm adding a ToDo which I will hopefully keep updated in the off-chance someone decides they want to contribute (please, PRs welcome <3)
-
-- Database functionalities - add to DB if non-existent. Update DB if already present (check with URL as key)
-
+Nothing left to be done, this is pretty complete!
 
 ## Deploy
 

@@ -3,3 +3,4 @@ datetime
 ollama
 dotenv
 mysql-connector-python
+icalendar
