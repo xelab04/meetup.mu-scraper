@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: meetup-scraper-api
+  name: meetup-scraper-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meetup-scraper-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: meetup-scraper-api
+    spec:
+      containers:
+      - image: registry.alexbissessur.dev/meetup-scraper-api:1.0
+        name: meetup-scraper-api
+        ports:
+        - containerPort: 5000
+        resources: {}
+status: {}

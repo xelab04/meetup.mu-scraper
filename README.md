@@ -12,4 +12,6 @@ Nothing left to be done, this is pretty complete!
 
 ```
 docker build . -f job.Dockerfile -t registry.alexbissessur.dev/meetup-scraper:{} && docker push registry.alexbissessur.dev/meetup-scraper:{}
+
+docker build . -f api.Dockerfile -t registry.alexbissessur.dev/meetup-scraper-api:{} && docker push registry.alexbissessur.dev/meetup-scraper-api:{}
 ```
