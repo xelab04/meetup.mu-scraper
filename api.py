@@ -18,7 +18,6 @@ try:
     OLLAMA_PORT=os.environ["OLLAMA_PORT"]
     OLLAMA_MODEL='gemma3:1b'
 
-    COMMUNITY = os.environ["COMMUNITY"]
 except KeyError:
     print("Missing env vars")
     time.sleep(5)
