@@ -4,3 +4,4 @@ ollama
 dotenv
 mysql-connector-python
 icalendar
+flask

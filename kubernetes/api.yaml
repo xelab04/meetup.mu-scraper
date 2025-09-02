@@ -22,6 +22,7 @@ spec:
       containers:
       - image: registry.alexbissessur.dev/meetup-scraper-api:1.0
         name: meetup-scraper-api
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         resources: {}
