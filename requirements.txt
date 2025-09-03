@@ -5,3 +5,4 @@ dotenv
 mysql-connector-python
 icalendar
 flask
+gunicorn
