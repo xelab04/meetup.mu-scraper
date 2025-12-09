@@ -190,7 +190,7 @@ def get_location(description) -> str|None:
                 'content': content,
             },
         ])
-        let res_dict = json.loads(response.message.content.strip("\n").strip(" "))
+        res_dict = json.loads(response.message.content.strip("\n").strip(" "))
         return res_dict["location"]
 
     except Exception as e:
