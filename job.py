@@ -21,7 +21,8 @@ try:
 
     OLLAMA_URL=os.environ["OLLAMA_URL"]
     OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-    OLLAMA_MODEL='gemma3:1b'
+    # OLLAMA_MODEL='gemma3:1b'
+    OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
 
     COMMUNITY = os.environ["COMMUNITY"]
 except KeyError:
@@ -175,8 +176,9 @@ def get_location(description) -> str|None:
 
     """
 
-    content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
+    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
     # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'"
+    content = description + "\n" + "Taking the above, where is the event being held? Keep your answer brief and only give the name of the location. Return the answer in JSON format of “location”: <location>"
 
     client = Client(
         host=f"{OLLAMA_URL}:{OLLAMA_PORT}",
@@ -188,10 +190,14 @@ def get_location(description) -> str|None:
                 'content': content,
             },
         ])
-    except:
+        let res_dict = json.loads(response.message.content.strip("\n").strip(" "))
+        return res_dict["location"]
+
+    except Exception as e:
+        print(e)
         return None
 
-    return response.message.content.strip("\n").strip(".")
+    # return response.message.content.strip("\n").strip(".")
 
 def add_to_db(list_of_meetups: list[MEETUP]) -> None:
     conn, cursor = get_db_cursor()

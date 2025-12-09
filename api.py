@@ -16,7 +16,7 @@ try:
 
     OLLAMA_URL=os.environ["OLLAMA_URL"]
     OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-    OLLAMA_MODEL='gemma3:1b'
+    OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
 
 except KeyError:
     print("Missing env vars")
