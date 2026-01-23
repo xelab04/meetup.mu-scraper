@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: cnmu-scraper
-              image: registry.alexbissessur.dev/meetup-scraper:2.17
+              image: registry.alexbissessur.dev/meetup-scraper:3.16
               imagePullPolicy: IfNotPresent
               envFrom:
                 - configMapRef:
