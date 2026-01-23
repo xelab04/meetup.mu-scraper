@@ -14,7 +14,7 @@ except KeyError as e:
     print("Missing env vars")
     print(e)
     sys.exit(1)
-    
+
 
 
 def ical_unescape(value: str) -> str:
@@ -27,7 +27,7 @@ def ical_unescape(value: str) -> str:
         .replace(r"\;", ";")
         .replace(r"\\", "\\")
     )
-    
+
 def join_broken_lines(description: str) -> str:
     """Join lines that are broken according to iCalendar folding rules."""
     return re.sub(r'(\w)\s*\n\s*(\w)', r'\1\2', description)
@@ -101,7 +101,7 @@ def call_ollama(text: str, timeout_s: int = 60) -> Dict[str, Any]:
         "stream": False,
     }
 
-    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}/api/chat", json=payload, timeout=timeout_s)
+    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}", json=payload, timeout=timeout_s)
     r.raise_for_status()
 
     content = r.json().get("message", {}).get("content", "").strip()
@@ -113,9 +113,9 @@ def call_ollama(text: str, timeout_s: int = 60) -> Dict[str, Any]:
 
 
 def get_location(description) -> str|None:
-    
+
     cleaned = ical_unescape(join_broken_lines(description.strip()))
 
     result = call_ollama(cleaned)
-    
+
     return result.get("venue_name")
