@@ -2,7 +2,7 @@ import requests
 import icalendar
 import mysql.connector
 from dotenv import load_dotenv
-from ollama import Client
+from location import get_location
 import os
 import sys
 import json
@@ -169,35 +169,6 @@ def get_ical(url) -> None:
 
     with open("ical.vcs", "wb+") as filehandle:
         filehandle.write(content)
-
-def get_location(description) -> str|None:
-    """
-    Takes the entire unformatted, fairly ugly-looking description and asks the AI slave to get the location for me. Not always accurate on TBC/TBD but whatever.
-
-    """
-
-    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Only the company name. If it is not specified or TBC (to be confirmed) just say TBD. Where is the meetup taking place?"
-    # content = description + "\n" + "Keep your answer brief and limited to only the answer with no extra words. Where is the meetup taking place? If unknown, just say 'TBD'"
-    content = description + "\n" + "Taking the above, where is the event being held? Keep your answer brief and only give the name of the location. Return the answer in JSON format of “location”: <location>"
-
-    client = Client(
-        host=f"{OLLAMA_URL}:{OLLAMA_PORT}",
-    )
-    try:
-        response = client.chat(model=OLLAMA_MODEL, messages=[
-            {
-                'role': 'user',
-                'content': content,
-            },
-        ])
-        res_dict = json.loads(response.message.content.strip("\n").strip(" "))
-        return res_dict["location"]
-
-    except Exception as e:
-        print(e)
-        return None
-
-    # return response.message.content.strip("\n").strip(".")
 
 def add_to_db(list_of_meetups: list[MEETUP]) -> None:
     conn, cursor = get_db_cursor()
