@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: frontend-scraper
-              image: registry.alexbissessur.dev/meetup-scraper:3.16
+              image: registry.alexbissessur.dev/meetup-scraper:3.17
               imagePullPolicy: IfNotPresent
               envFrom:
                 - configMapRef:
