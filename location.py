@@ -102,7 +102,7 @@ def call_ollama(text: str, timeout_s: int = 60) -> Dict[str, Any]:
         "stream": False,
     }
 
-    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}", json=payload, timeout=timeout_s)
+    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}/api/chat", json=payload, timeout=timeout_s)
     r.raise_for_status()
 
     content = r.json().get("message", {}).get("content", "").strip()
