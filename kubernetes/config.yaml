@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  OLLAMA_URL: "ollama.ollama.svc.cluster.local"
+  OLLAMA_URL: "http://ollama.ollama.svc.cluster.local"
   OLLAMA_PORT: "11434"
   OLLAMA_MODEL: "gemma3:1b"
   DATABASE_URL: "meetup-mysql"

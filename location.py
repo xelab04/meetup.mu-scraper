@@ -4,6 +4,7 @@ import json
 import re
 import requests
 from typing import Any, Dict
+
 try:
 
     OLLAMA_URL=os.environ["OLLAMA_URL"]
