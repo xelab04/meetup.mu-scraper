@@ -10,6 +10,7 @@ try:
     OLLAMA_URL=os.environ["OLLAMA_URL"]
     OLLAMA_PORT=os.environ["OLLAMA_PORT"]
     OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
+    TIMEOUT=int(os.environ["OLLAMA_TIMEOUT"])
 
 except KeyError as e:
     print("Missing env vars")
@@ -87,7 +88,7 @@ PROMPT = (
 )
 
 
-def call_ollama(text: str, timeout_s: int = 60) -> Dict[str, Any]:
+def call_ollama(text: str) -> Dict[str, Any]:
     payload = {
         "model": OLLAMA_MODEL,
         "messages": [
@@ -102,7 +103,7 @@ def call_ollama(text: str, timeout_s: int = 60) -> Dict[str, Any]:
         "stream": False,
     }
 
-    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}/api/chat", json=payload, timeout=timeout_s)
+    r = requests.post(f"{OLLAMA_URL}:{OLLAMA_PORT}/api/chat", json=payload, timeout=TIMEOUT)
     r.raise_for_status()
 
     content = r.json().get("message", {}).get("content", "").strip()

@@ -5,6 +5,7 @@ data:
   OLLAMA_MODEL: "granite4:3b"
   DATABASE_URL: "meetup-mysql"
   DATABASE_PORT: "3306"
+  OLLAMA_TIMEOUT: "180" # 3 min
 kind: ConfigMap
 metadata:
   creationTimestamp: null
