@@ -161,6 +161,9 @@ def get_all_events(community) -> list[MEETUP]:
                 abstract=None,
                 date=component.get('dtstart').dt
             ))
+
+            pprint(all_events[-1])
+
     return all_events
 
 def get_ical(url) -> None:
