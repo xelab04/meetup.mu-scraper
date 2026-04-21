@@ -73,7 +73,7 @@ def get_db_cursor():
     return conn, cursor
 
 def frontendmu() -> list[MEETUP]:
-    url = "https:///api/public/v1/meetups"
+    url = "https://coders.mu/api/public/v1/meetups"
     response = requests.get(url)
     big_frontend_json = response.json()
 
@@ -96,7 +96,7 @@ def frontendmu() -> list[MEETUP]:
     return all_meetups
 
 def delete_frontendmu() -> int|None:
-    url = "https:///api/public/v1/meetups"
+    url = "https://coders.mu/api/public/v1/meetups"
     response = requests.get(url)
     big_frontend_json = response.json()
 
