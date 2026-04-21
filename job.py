@@ -73,7 +73,7 @@ def get_db_cursor():
     return conn, cursor
 
 def frontendmu() -> list[MEETUP]:
-    url = "https://raw.githubusercontent.com/frontendmu/frontend.mu/main/packages/frontendmu-data/data/meetups-raw.json"
+    url = "https:///api/public/v1/meetups"
     response = requests.get(url)
     big_frontend_json = response.json()
 
@@ -84,11 +84,11 @@ def frontendmu() -> list[MEETUP]:
             id=f"frontendmu-{event['id']}",
             community="frontendmu",
             title="FrontendMU " + event["title"],
-            registration=f"https://frontend.mu/meetup/{event['id']}",
+            registration=f"https://frontend.mu/meetup/{event['slug']}",
             type="meetup",
-            location=event['Venue'],
+            location=event['venue'],
             abstract="",
-            date=datetime.strptime(event['Date'], '%Y-%m-%d')
+            date=datetime.strptime(event['date'], '%Y-%m-%d')
         )
 
         all_meetups.append(event_details)
@@ -96,10 +96,9 @@ def frontendmu() -> list[MEETUP]:
     return all_meetups
 
 def delete_frontendmu() -> int|None:
-    url = "https://raw.githubusercontent.com/frontendmu/frontend.mu/main/packages/frontendmu-data/data/meetups-raw.json"
+    url = "https:///api/public/v1/meetups"
     response = requests.get(url)
     big_frontend_json = response.json()
-
 
     list_of_ids = [f"frontendmu-{event['id']}" for event in big_frontend_json]
 
