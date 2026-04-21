@@ -1,10 +1,10 @@
 FROM registry.suse.com/bci/python:3.11
 
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 
 WORKDIR /app
 
-COPY . ./
+COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
