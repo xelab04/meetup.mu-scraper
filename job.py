@@ -22,6 +22,8 @@ OLLAMA_URL=os.environ["OLLAMA_URL"]
 OLLAMA_PORT=os.environ["OLLAMA_PORT"]
 OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
 
+COMMUNITY=os.environ["COMMUNITY"]
+
 # try:
 #     DATABASE_URL=os.environ["DATABASE_URL"]
 #     DATABASE_PORT=os.environ["DATABASE_PORT"]
