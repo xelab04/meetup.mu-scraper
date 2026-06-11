@@ -12,35 +12,25 @@ from datetime import datetime
 
 load_dotenv()
 
-DATABASE_URL=os.environ["DATABASE_URL"]
-DATABASE_PORT=os.environ["DATABASE_PORT"]
-DATABASE_USER=os.environ["DATABASE_USER"]
-DATABASE_PASSWORD=os.environ["DATABASE_PASSWORD"]
-DATABASE_DATABASE=os.environ["DATABASE_DATABASE"]
+def get_env_var(env_var_name: str) -> str:
+    try:
+        return os.environ[env_var_name]
+    except KeyError:
+        print(f"{env_var_name} not found")
+        time.sleep(5)
+        sys.exit()
 
-OLLAMA_URL=os.environ["OLLAMA_URL"]
-OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
+DATABASE_URL=get_env_var("DATABASE_URL")
+DATABASE_PORT=get_env_var("DATABASE_PORT")
+DATABASE_USER=get_env_var("DATABASE_USER")
+DATABASE_PASSWORD=get_env_var("DATABASE_PASSWORD")
+DATABASE_DATABASE=get_env_var("DATABASE_DATABASE")
 
-COMMUNITY=os.environ["COMMUNITY"]
+OLLAMA_URL=get_env_var("OLLAMA_URL")
+OLLAMA_PORT=get_env_var("OLLAMA_PORT")
+OLLAMA_MODEL=get_env_var("OLLAMA_MODEL")
 
-# try:
-#     DATABASE_URL=os.environ["DATABASE_URL"]
-#     DATABASE_PORT=os.environ["DATABASE_PORT"]
-#     DATABASE_USER=os.environ["DATABASE_USER"]
-#     DATABASE_PASSWORD=os.environ["DATABASE_PASSWORD"]
-#     DATABASE_DATABASE=os.environ["DATABASE_DATABASE"]
-
-#     OLLAMA_URL=os.environ["OLLAMA_URL"]
-#     OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-#     # OLLAMA_MODEL='gemma3:1b'
-#     OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
-
-#     COMMUNITY = os.environ["COMMUNITY"]
-# except KeyError:
-#     print("Missing env vars")
-#     time.sleep(5)
-#     sys.exit(1)
+COMMUNITY=get_env_var("COMMUNITY")
 
 class MEETUP:
     def __init__(self, id, community, title, registration, type, location, abstract, date):
