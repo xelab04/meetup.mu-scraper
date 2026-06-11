@@ -145,6 +145,15 @@ def pymug() -> list[MEETUP]:
 
     for key in json:
         event = json[key]
+
+        try:
+            date = datetime.strptime(event["date"], '%B %d, %Y')
+        except ValueError:
+            try:
+                date = datetime.strptime(event["date"], '%B, %Y')
+            except ValueError:
+                date = datetime(year=1990, month=1, day=1)
+
         new_meetup = MEETUP(
             id = key,
             community = "pymug",
@@ -153,7 +162,7 @@ def pymug() -> list[MEETUP]:
             type = "meetup",
             location = event["venue"],
             abstract = None,
-            date = datetime.strptime(event["date"], '%B %d, %Y')
+            date = date
         )
         all_meetups.append(new_meetup)
 

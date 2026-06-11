@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: non-meetup-scraper
-              image: registry.alexbissessur.dev/meetup-scraper:3.19
+              image: registry.alexbissessur.dev/meetup-scraper:3.20
               imagePullPolicy: IfNotPresent
               envFrom:
                 - configMapRef:
