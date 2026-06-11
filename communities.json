@@ -12,15 +12,15 @@
     "url": "https://www.meetup.com/laravel-moris/events/ical/"
   },
   {
-    "name": "pymug",
-    "url": "https://www.meetup.com/pymauritius/events/ical/"
-  },
-  {
     "name": "nugm",
     "url": "https://www.meetup.com/net-user-group-mauritius/events/ical/"
   },
   {
     "name": "pydata",
     "url": "https://www.meetup.com/pydata-mu/events/ical/"
+  },
+  {
+    "name": "wordpressmu",
+    "url": "https://www.meetup.com/mauritius-wordpress-meetup-group/events/ical/"
   }
 ]

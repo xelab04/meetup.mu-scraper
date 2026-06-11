@@ -16,21 +16,17 @@ def get_env_var(env_var_name: str) -> str:
     try:
         return os.environ[env_var_name]
     except KeyError:
-        print(f"{env_var_name} not found")
+        print(f"job.py: {env_var_name} not found")
         time.sleep(5)
         sys.exit()
 
+COMMUNITY=get_env_var("COMMUNITY")
 DATABASE_URL=get_env_var("DATABASE_URL")
 DATABASE_PORT=get_env_var("DATABASE_PORT")
 DATABASE_USER=get_env_var("DATABASE_USER")
 DATABASE_PASSWORD=get_env_var("DATABASE_PASSWORD")
 DATABASE_DATABASE=get_env_var("DATABASE_DATABASE")
 
-OLLAMA_URL=get_env_var("OLLAMA_URL")
-OLLAMA_PORT=get_env_var("OLLAMA_PORT")
-OLLAMA_MODEL=get_env_var("OLLAMA_MODEL")
-
-COMMUNITY=get_env_var("COMMUNITY")
 
 class MEETUP:
     def __init__(self, id, community, title, registration, type, location, abstract, date):
@@ -140,6 +136,29 @@ def cnmu() -> list[MEETUP]:
 
     return all_meetups
 
+def pymug() -> list[MEETUP]:
+    url = "https://www.pymug.com/events.json"
+    response = requests.get(url)
+    json = response.json()
+
+    all_meetups = []
+
+    for key in json:
+        event = json[key]
+        new_meetup = MEETUP(
+            id = key,
+            community = "pymug",
+            title = event["title"],
+            registration = event["register"],
+            type = "meetup",
+            location = event["venue"],
+            abstract = None,
+            date = datetime.strptime(event["date"], '%B %d, %Y')
+        )
+        all_meetups.append(new_meetup)
+
+    return all_meetups
+
 def get_all_events(community) -> list[MEETUP]:
     all_events = []
 
@@ -193,18 +212,21 @@ def add_to_db(list_of_meetups: list[MEETUP]) -> None:
     conn.close()
 
 def main():
-    if COMMUNITY == "cnmu":
+    if COMMUNITY == "notMEETUPCOM":
+        pymug_events = pymug()
+        pprint(pymug_events)
+        add_to_db(pymug_events)
+        # delete_pymug()
+
         cnmu_events = cnmu()
         pprint(cnmu_events)
         add_to_db(cnmu_events)
-        return 0
+        # delete cnmu
 
-    if COMMUNITY == "frontendmu":
         frontend_events = frontendmu()
         pprint(frontend_events)
         add_to_db(frontend_events)
         delete_frontendmu()
-        return 0
 
     # Get all events for all meetupcom communities
     if COMMUNITY == "MEETUPCOM":
@@ -219,16 +241,6 @@ def main():
             print(community["name"])
             pprint(all_events_for_community)
             print()
-
-
-    # If we are getting for a single meetupcom community, which we never do
-    else:
-        with open("newcommunities.json", "r") as f:
-            communities = json.load(f)
-
-        get_ical(communities[COMMUNITY])
-        all_event_json = get_all_events(COMMUNITY)
-        add_to_db(all_event_json)
 
 if __name__ == "__main__":
     main()

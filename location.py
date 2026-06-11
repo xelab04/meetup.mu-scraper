@@ -4,19 +4,20 @@ import json
 import re
 import requests
 from typing import Any, Dict
+import time
 
-try:
+def get_env_var(env_var_name: str) -> str:
+    try:
+        return os.environ[env_var_name]
+    except KeyError:
+        print(f"location.py: {env_var_name} not found")
+        time.sleep(5)
+        sys.exit()
 
-    OLLAMA_URL=os.environ["OLLAMA_URL"]
-    OLLAMA_PORT=os.environ["OLLAMA_PORT"]
-    OLLAMA_MODEL=os.environ["OLLAMA_MODEL"]
-    TIMEOUT=int(os.environ["OLLAMA_TIMEOUT"])
-
-except KeyError as e:
-    print("Missing env vars")
-    print(e)
-    sys.exit(1)
-
+OLLAMA_URL=get_env_var("OLLAMA_URL")
+OLLAMA_PORT=get_env_var("OLLAMA_PORT")
+OLLAMA_MODEL=get_env_var("OLLAMA_MODEL")
+TIMEOUT=int(get_env_var("OLLAMA_TIMEOUT"))
 
 
 def ical_unescape(value: str) -> str:
