@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: frontend-scraper
+  name: non-meetup-scraper
 spec:
   schedule: "0 0 * * *"
   jobTemplate:
@@ -9,7 +9,7 @@ spec:
       template:
         spec:
           containers:
-            - name: frontend-scraper
+            - name: non-meetup-scraper
               image: registry.alexbissessur.dev/meetup-scraper:3.19
               imagePullPolicy: IfNotPresent
               envFrom:
